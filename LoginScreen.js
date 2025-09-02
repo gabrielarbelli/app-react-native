@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -10,11 +10,33 @@ import {
   Platform,
 } from 'react-native';
 import { useAuth } from './AuthContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function LoginScreen() {
   const [username, setUsername] = useState('admin');
   const [password, setPassword] = useState('123');
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+  const [toastType, setToastType] = useState('error');
   const { login } = useAuth();
+
+  // Mostrar toast de logout quando chegar na tela
+  useEffect(() => {
+    // Verificar se veio de um logout
+    const checkIfFromLogout = async () => {
+      try {
+        const wasLoggedOut = await AsyncStorage.getItem('wasLoggedOut');
+        if (wasLoggedOut === 'true') {
+          showToastMessage('Sessão terminada com sucesso!', 'error');
+          await AsyncStorage.removeItem('wasLoggedOut');
+        }
+      } catch (error) {
+        console.log('Erro ao verificar logout:', error);
+      }
+    };
+    
+    checkIfFromLogout();
+  }, []);
 
   const handleLogin = async () => {
     if (username.trim() === '' || password.trim() === '') {
@@ -25,10 +47,23 @@ export default function LoginScreen() {
     const result = await login(username, password);
     
     if (result.success) {
-      Alert.alert('Sucesso', 'Login realizado com sucesso!');
+      // Login bem-sucedido - usuário será redirecionado automaticamente
+      // Não exibir toast aqui pois será exibido no MenuScreen
     } else {
       Alert.alert('Erro', result.message);
     }
+  };
+
+  // Função para mostrar toast
+  const showToastMessage = (message, type) => {
+    setToastMessage(message);
+    setToastType(type);
+    setShowToast(true);
+    
+    // Auto-hide após 3 segundos
+    setTimeout(() => {
+      setShowToast(false);
+    }, 3000);
   };
 
   return (
@@ -78,6 +113,21 @@ export default function LoginScreen() {
           <Text style={styles.helpText}>Palavra-passe: 123</Text>
         </View>
       </View>
+
+      {/* Toast de Notificação */}
+      {showToast && (
+        <View style={styles.toastContainer}>
+          <View style={[
+            styles.toastContent,
+            toastType === 'success' ? styles.toastSuccess : styles.toastError
+          ]}>
+            <Text style={styles.toastText}>
+              {toastType === 'success' ? '✓ ' : '✗ '}
+              {toastMessage}
+            </Text>
+          </View>
+        </View>
+      )}
     </KeyboardAvoidingView>
   );
 }
@@ -155,6 +205,40 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: 'bold',
     marginBottom: 2,
+  },
+
+  // Estilos do Toast
+  toastContainer: {
+    position: 'absolute',
+    top: 100,
+    right: 20,
+    left: 20,
+    zIndex: 1000,
+  },
+  toastContent: {
+    borderRadius: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  toastSuccess: {
+    backgroundColor: '#4CAF50',
+  },
+  toastError: {
+    backgroundColor: '#F44336',
+  },
+  toastText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '600',
+    textAlign: 'center',
   },
 });
 

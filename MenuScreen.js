@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -12,6 +12,17 @@ import { useAuth } from './AuthContext';
 
 export default function MenuScreen({ navigation }) {
   const { logout, userData } = useAuth();
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+  const [toastType, setToastType] = useState('success');
+  
+  // Mostrar toast de boas-vindas quando chegar na tela
+  useEffect(() => {
+    setTimeout(() => {
+      showToastMessage('Login realizado com sucesso!', 'success');
+    }, 500);
+  }, []);
+
   const menuItems = [
     {
       title: 'Calculadora',
@@ -50,6 +61,18 @@ export default function MenuScreen({ navigation }) {
     );
   };
 
+  // Função para mostrar toast
+  const showToastMessage = (message, type) => {
+    setToastMessage(message);
+    setToastType(type);
+    setShowToast(true);
+    
+    // Auto-hide após 3 segundos
+    setTimeout(() => {
+      setShowToast(false);
+    }, 3000);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -85,6 +108,21 @@ export default function MenuScreen({ navigation }) {
         activeOpacity={0.7}>
         <Text style={styles.logoutButtonText}>Terminar Sessão</Text>
       </TouchableOpacity>
+
+      {/* Toast de Notificação */}
+      {showToast && (
+        <View style={styles.toastContainer}>
+          <View style={[
+            styles.toastContent,
+            toastType === 'success' ? styles.toastSuccess : styles.toastError
+          ]}>
+            <Text style={styles.toastText}>
+              {toastType === 'success' ? '✓ ' : '✗ '}
+              {toastMessage}
+            </Text>
+          </View>
+        </View>
+      )}
     </SafeAreaView>
   );
 }
@@ -165,6 +203,40 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+
+  // Estilos do Toast
+  toastContainer: {
+    position: 'absolute',
+    top: 100,
+    right: 20,
+    left: 20,
+    zIndex: 1000,
+  },
+  toastContent: {
+    borderRadius: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  toastSuccess: {
+    backgroundColor: '#4CAF50',
+  },
+  toastError: {
+    backgroundColor: '#F44336',
+  },
+  toastText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '600',
+    textAlign: 'center',
   },
 });
 

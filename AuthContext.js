@@ -60,6 +60,9 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
+      // Marcar que o usuário fez logout para mostrar toast na tela de login
+      await AsyncStorage.setItem('wasLoggedOut', 'true');
+      
       await AsyncStorage.removeItem('authToken');
       await AsyncStorage.removeItem('userData');
       
