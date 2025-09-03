@@ -15,6 +15,7 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [userData, setUserData] = useState(null);
+  const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {
     checkAuthStatus();
@@ -24,6 +25,11 @@ export const AuthProvider = ({ children }) => {
     try {
       const token = await AsyncStorage.getItem('authToken');
       const user = await AsyncStorage.getItem('userData');
+      const storedDark = await AsyncStorage.getItem('darkMode');
+
+      if (storedDark !== null) {
+        setDarkMode(storedDark === 'true');
+      }
       
       if (token && user) {
         setUserData(JSON.parse(user));
@@ -33,6 +39,15 @@ export const AuthProvider = ({ children }) => {
       console.error('Erro ao verificar autenticação:', error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const updateDarkMode = async (value) => {
+    try {
+      setDarkMode(value);
+      await AsyncStorage.setItem('darkMode', value.toString());
+    } catch (error) {
+      console.error('Erro ao salvar darkMode:', error);
     }
   };
 
@@ -77,6 +92,8 @@ export const AuthProvider = ({ children }) => {
     isAuthenticated,
     isLoading,
     userData,
+    darkMode,
+    updateDarkMode,
     login,
     logout,
   };

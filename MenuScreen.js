@@ -12,6 +12,7 @@ import { useAuth } from './AuthContext';
 
 export default function MenuScreen({ navigation }) {
   const { logout, userData } = useAuth();
+  const { darkMode, updateDarkMode } = useAuth();
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const [toastType, setToastType] = useState('success');
@@ -26,7 +27,7 @@ export default function MenuScreen({ navigation }) {
   const menuItems = [
     {
       title: 'Calculadora',
-      description: 'Calculadora básica para operações matemáticas',
+      description: 'Calculadora básica',
       color: '#4CAF50',
       onPress: () => navigation.navigate('Calculator'),
     },
@@ -37,16 +38,28 @@ export default function MenuScreen({ navigation }) {
       onPress: () => navigation.navigate('Profile'),
     },
     {
+      title: 'Galeria',
+      description: 'Fotos e imagens da galeria',
+      color: '#f32123',
+      onPress: () => navigation.navigate('Gallery'),
+    },
+    {
+      title: 'Pokedéx',
+      description: 'API pública de pokémons',
+      color: '#9C27B0',
+      onPress: () => navigation.navigate('Pokemon'),
+    },
+    {
       title: 'Configurações',
       description: 'Ajustar preferências da aplicação',
       color: '#FF9800',
-      onPress: () => Alert.alert('Configurações', 'Funcionalidade em desenvolvimento'),
+      onPress: () => navigation.navigate('Settings'),
     },
     {
       title: 'Sobre',
       description: 'Informações sobre a aplicação',
-      color: '#9C27B0',
-      onPress: () => Alert.alert('Sobre', 'Aplicação React Native simples criada com Expo'),
+      color: '#959595',
+      onPress: () => Alert.alert('Sobre', 'Aplicação React Native criada com Expo, Versão 1.0.0'),
     },
   ];
 
@@ -74,7 +87,7 @@ export default function MenuScreen({ navigation }) {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, darkMode ? styles.darkBackground : styles.lightBackground]}>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Menu Principal</Text>
       </View>
@@ -87,7 +100,11 @@ export default function MenuScreen({ navigation }) {
         {menuItems.map((item, index) => (
           <TouchableOpacity
             key={index}
-            style={[styles.menuItem, { borderLeftColor: item.color }]}
+            style={[
+              styles.menuItem, 
+              { borderLeftColor: item.color },
+              index === menuItems.length - 1 && styles.lastMenuItem
+            ]}
             onPress={item.onPress}
             activeOpacity={0.7}
           >
@@ -128,6 +145,8 @@ export default function MenuScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  lightBackground: { backgroundColor: '#fff' },
+  darkBackground: { backgroundColor: '#021123' },
   container: {
     flex: 1,
     backgroundColor: '#021123',
@@ -160,11 +179,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 12,
     marginBottom: 15,
-    padding: 20,
+    padding: 15,
     flexDirection: 'row',
     alignItems: 'center',
     borderLeftWidth: 4,
     elevation: 5,
+  },
+  lastMenuItem: {
+    marginBottom: 40, 
   },
   menuItemContent: {
     flex: 1,
