@@ -1,25 +1,49 @@
-# Aplicação React Native Simples
+# Aplicação React Native Completa
 
-Uma aplicação React Native simples criada com Expo que inclui:
-- Tela de login
-- Menu principal
-- Calculadora funcional
+Uma aplicação React Native completa criada com Expo que inclui múltiplas funcionalidades e recursos avançados:
 
 ## Funcionalidades
 
-### 🔐 Login
-- Tela de login simples com validação
+### 🔐 Sistema de Autenticação
+- Tela de login com validação
+- Context API para gerenciamento de estado global
+- Persistência de sessão com AsyncStorage
 - Credenciais de teste: `admin` / `123`
 
 ### 📱 Menu Principal
-- Interface limpa e intuitiva
-- Navegação para diferentes funcionalidades
-- Opção de terminar sessão
+- Interface moderna e intuitiva
+- Navegação para todas as funcionalidades
+- Toast de notificação de boas-vindas
+- Opção de terminar sessão com confirmação
 
-### 🧮 Calculadora
+### 👤 Perfil do Usuário
+- Visualização completa do perfil
+- Edição de informações pessoais (modal)
+- Upload de foto de perfil (câmera/galeria)
+- Persistência de dados com AsyncStorage
+- Indicador de status online
+
+### 🧮 Calculadora Avançada
 - Operações básicas: +, -, ×, ÷
 - Funções adicionais: %, ±, C (limpar)
 - Interface similar à calculadora do iOS
+- Histórico de cálculos
+
+### 🖼️ Galeria de Imagens
+- Exibição de imagens em grid
+- API de imagens aleatórias (Picsum)
+- Interface responsiva
+
+### 🎮 Pokedéx
+- Integração com API pública do Pokémon
+- Lista de 20 pokémons com imagens
+- Informações de tipos
+- Interface em cards
+
+### ⚙️ Configurações
+- Alternância entre modo claro e escuro
+- Persistência da preferência de tema
+- Interface adaptativa
 
 ## Como Executar
 
@@ -55,20 +79,36 @@ Uma aplicação React Native simples criada com Expo que inclui:
 
 ```
 SimpleApp/
-├── App.js              # Componente principal com navegação
-├── LoginScreen.js      # Tela de login
-├── MenuScreen.js       # Menu principal
-├── CalculatorScreen.js # Calculadora
-├── package.json        # Dependências do projeto
-└── README.md          # Este arquivo
+├── App.js                 # Componente principal com navegação
+├── AuthContext.js         # Context para autenticação e estado global
+├── LoginScreen.js         # Tela de login
+├── MenuScreen.js          # Menu principal
+├── ProfileScreen.js       # Tela de perfil do usuário
+├── CalculatorScreen.js    # Calculadora avançada
+├── GalleryScreen.js       # Galeria de imagens
+├── PokemonScreen.js       # Pokedéx com API
+├── SettingsScreen.js      # Configurações e temas
+├── theme.js              # Configurações de cores e estilos
+├── package.json          # Dependências do projeto
+├── app.json              # Configurações do Expo
+├── assets/               # Recursos (ícones, imagens)
+│   ├── icon.png
+│   ├── adaptive-icon.png
+│   ├── favicon.png
+│   └── splash-icon.png
+└── README.md             # Este arquivo
 ```
 
 ## Dependências Principais
 
 - **React Native:** Framework para desenvolvimento mobile
 - **Expo:** Plataforma para desenvolvimento React Native
-- **React Navigation:** Navegação entre telas
+- **React Navigation:** Navegação entre telas (Stack Navigator)
 - **React Native Screens:** Otimização de performance para navegação
+- **AsyncStorage:** Armazenamento local de dados
+- **Axios:** Cliente HTTP para requisições de API
+- **Expo Image Picker:** Seleção de imagens da galeria e câmera
+- **React Native Safe Area Context:** Gerenciamento de áreas seguras
 
 ## Credenciais de Teste
 
@@ -77,17 +117,36 @@ SimpleApp/
 
 ## Notas Técnicas
 
-- Compatível com Expo SDK 50+
+- Compatível com Expo SDK 53+
 - Suporte para iOS e Android
-- Interface responsiva
+- Interface responsiva e adaptativa
 - Navegação por stack
+- Sistema de temas (claro/escuro)
+- Persistência de dados local
+- Integração com APIs externas
+- Gerenciamento de estado com Context API
+- Componentes reutilizáveis e modulares
+
+## Funcionalidades Implementadas ✅
+
+- ✅ Sistema de autenticação com Context API
+- ✅ Persistência de dados com AsyncStorage
+- ✅ Múltiplas funcionalidades no menu
+- ✅ Sistema de temas (claro/escuro)
+- ✅ Upload de imagens (câmera/galeria)
+- ✅ Integração com APIs externas
+- ✅ Interface responsiva e moderna
+- ✅ Navegação completa entre telas
 
 ## Próximos Passos
 
-Esta é uma aplicação de demonstração. Funcionalidades que podem ser adicionadas:
-- Autenticação real
-- Persistência de dados
-- Mais funcionalidades no menu
-- Temas personalizáveis
+Funcionalidades que podem ser adicionadas no futuro:
 - Notificações push
+- Autenticação com Firebase
+- Banco de dados em nuvem
+- Mais jogos e funcionalidades interativas
+- Compartilhamento de conteúdo
+- Modo offline
+- Animações avançadas
+- Testes automatizados
 
