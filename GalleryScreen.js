@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, Image, ActivityIndicator, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { useAuth } from './AuthContext';
+import { colors } from './theme';
 
 export default function GalleryScreen({ navigation }) {
   const [photos, setPhotos] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { darkMode, updateDarkMode } = useAuth();
 
   useEffect(() => {
     // Usando API gratuita de imagens aleatórias
@@ -25,7 +28,7 @@ export default function GalleryScreen({ navigation }) {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: darkMode ? colors.darkBackground : colors.lightBackground }]}>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Galeria</Text>
         <TouchableOpacity 
@@ -40,9 +43,9 @@ export default function GalleryScreen({ navigation }) {
         data={photos}
         keyExtractor={item => item.id}
         renderItem={({ item }) => (
-          <View style={styles.card}>
+          <View style={[styles.card, { backgroundColor: darkMode ? colors.bgCardDark : colors.bgCardLight }]}>
             <Image source={{ uri: item.url }} style={styles.image} />
-            <Text style={styles.author}>{item.author}</Text>
+            <Text style={[styles.author, { color: darkMode ? colors.textDark : colors.textLight }]}>{item.author}</Text>
           </View>
         )}
         numColumns={2}
@@ -66,7 +69,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#021123',
   },
   header: {
-    backgroundColor: '#021123',
     paddingTop: 40,
     paddingBottom: 20,
     marginBottom: 10,
@@ -95,10 +97,8 @@ const styles = StyleSheet.create({
   card: { 
     flex: 1,
     margin: 8, 
-    backgroundColor: '#1a3a5a', 
     borderRadius: 10, 
     padding: 10, 
-    elevation: 2,
     borderWidth: 1,
     borderColor: '#2879cf',
   }, 
@@ -112,7 +112,6 @@ const styles = StyleSheet.create({
     marginTop: 5, 
     fontWeight: 'bold', 
     textAlign: 'center',
-    color: '#fff',
     fontSize: 12,
   },
 });

@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, Image, ActivityIndicator, StyleSheet, TouchableOpacity } from 'react-native';
 import axios from 'axios';
+import { colors } from './theme';
+import { useAuth } from './AuthContext';
 
-export default function PokemonScreen() {
+export default function PokemonScreen({ navigation }) {
   const [pokemons, setPokemons] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { darkMode, updateDarkMode } = useAuth();
 
   useEffect(() => {
     axios
@@ -13,6 +16,7 @@ export default function PokemonScreen() {
         const results = await Promise.all(
           response.data.results.map(async (poke) => {
             const details = await axios.get(poke.url);
+            console.log(details);
             return {
               name: poke.name,
               image: details.data.sprites.front_default,
@@ -38,7 +42,7 @@ export default function PokemonScreen() {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: darkMode ? colors.darkBackground : colors.lightBackground }]}>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Pokedéx</Text>
         <TouchableOpacity 
@@ -55,10 +59,10 @@ export default function PokemonScreen() {
         numColumns={2}
         contentContainerStyle={styles.listContainer}
         renderItem={({ item }) => (
-          <View style={styles.card}>
+          <View style={[styles.card, { backgroundColor: darkMode ? colors.bgCardDark : colors.bgCardLight }]}>
             <Image source={{ uri: item.image }} style={styles.image} />
             <Text style={styles.name}>{item.name.toUpperCase()}</Text>
-            <Text style={styles.type}>Tipo: {item.type}</Text>
+            <Text style={[styles.type, { color: darkMode ? colors.textDark : colors.textLight }]}>Tipo: {item.type}</Text>
           </View>
         )}
       />
@@ -76,10 +80,8 @@ const styles = StyleSheet.create({
     flex: 1, 
     justifyContent: 'center', 
     alignItems: 'center',
-    backgroundColor: '#021123',
   },
   header: {
-    backgroundColor: '#021123',
     paddingTop: 40,
     paddingBottom: 20,
     marginBottom: 10,
@@ -105,10 +107,8 @@ const styles = StyleSheet.create({
   card: { 
     flex: 1,
     margin: 8, 
-    backgroundColor: '#1a3a5a', 
     borderRadius: 10, 
     padding: 10, 
-    elevation: 2,
     borderWidth: 1,
     borderColor: '#2879cf',
     alignItems: 'center',
@@ -118,5 +118,5 @@ const styles = StyleSheet.create({
   },
   image: { width: 80, height: 80 },
   name: { marginTop: 5, fontWeight: 'bold', fontSize: 16, color: '#E3350D' },
-  type: { fontSize: 14, color: '#fff' },
+  type: { fontSize: 14, fontWeight: 'bold' },
 });

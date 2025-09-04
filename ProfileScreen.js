@@ -13,8 +13,11 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
+import { colors } from './theme';
+import { useAuth } from './AuthContext';
 
 export default function ProfileScreen({ navigation }) {
+  const { darkMode, updateDarkMode } = useAuth();
   const [profileImage, setProfileImage] = useState('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face');
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [editableData, setEditableData] = useState({
@@ -37,6 +40,7 @@ export default function ProfileScreen({ navigation }) {
   // Carregar foto salva quando o componente montar
   useEffect(() => {
     loadProfileImage();
+    loadProfileData();
     requestPermissions();
   }, []);
 
@@ -61,6 +65,19 @@ export default function ProfileScreen({ navigation }) {
       }
     } catch (error) {
       console.log('Erro ao carregar foto:', error);
+    }
+  };
+
+  // Função para carregar dados do perfil salvos
+  const loadProfileData = async () => {
+    try {
+      const savedData = await AsyncStorage.getItem('profileData');
+      if (savedData) {
+        const parsedData = JSON.parse(savedData);
+        setEditableData(parsedData);
+      }
+    } catch (error) {
+      console.log('Erro ao carregar dados do perfil:', error);
     }
   };
 
@@ -162,10 +179,20 @@ export default function ProfileScreen({ navigation }) {
   };
 
   // Função para salvar dados editados
-  const saveEditedData = () => {
-    // Aqui você pode adicionar validação se necessário
-    setIsEditModalVisible(false);
-    Alert.alert('Sucesso', 'Dados do perfil atualizados com sucesso!');
+  const saveEditedData = async () => {
+    try {
+      // Salvar dados no AsyncStorage
+      await AsyncStorage.setItem('profileData', JSON.stringify(editableData));
+      
+      // Fechar modal
+      setIsEditModalVisible(false);
+      
+      // Mostrar mensagem de sucesso
+      Alert.alert('Sucesso', 'Dados do perfil atualizados com sucesso!');
+    } catch (error) {
+      console.log('Erro ao salvar dados:', error);
+      Alert.alert('Erro', 'Não foi possível salvar os dados do perfil.');
+    }
   };
 
   // Função para atualizar campo editável
@@ -178,7 +205,7 @@ export default function ProfileScreen({ navigation }) {
 
   return (
     <ScrollView 
-      style={styles.container} 
+      style={[styles.container, { backgroundColor: darkMode ? colors.darkBackground : colors.lightBackground }]} 
       contentContainerStyle={styles.contentContainer}
       showsVerticalScrollIndicator={false}
     >
@@ -212,30 +239,30 @@ export default function ProfileScreen({ navigation }) {
           </TouchableOpacity>
         </View>
         
-        <Text style={styles.name}>{profileData.name}</Text>
+        <Text style={[styles.name, { color: darkMode ? colors.textDark : colors.textLight }]}>{profileData.name}</Text>
         <Text style={styles.email}>{profileData.email}</Text>
       </View>
 
       <View style={styles.infoSection}>
         <View style={styles.infoItem}>
           <Text style={styles.infoLabel}>Telefone</Text>
-          <Text style={styles.infoValue}>{profileData.phone}</Text>
+          <Text style={[styles.infoValue, { color: darkMode ? colors.textDark : colors.textLight }]}>{profileData.phone}</Text>
         </View>
 
         <View style={styles.infoItem}>
           <Text style={styles.infoLabel}>Localização</Text>
-          <Text style={styles.infoValue}>{profileData.location}</Text>
+          <Text style={[styles.infoValue, { color: darkMode ? colors.textDark : colors.textLight }]}>{profileData.location}</Text>
         </View>
 
         <View style={styles.infoItem}>
           <Text style={styles.infoLabel}>Membro desde</Text>
-          <Text style={styles.infoValue}>{profileData.joinDate}</Text>
+          <Text style={[styles.infoValue, { color: darkMode ? colors.textDark : colors.textLight }]}>{profileData.joinDate}</Text>
         </View>
       </View>
 
       <View style={styles.bioSection}>
         <Text style={styles.bioLabel}>Sobre mim</Text>
-        <Text style={styles.bioText}>{profileData.bio}</Text>
+        <Text style={[styles.bioText, { color: darkMode ? colors.textDark : colors.textLight }]}>{profileData.bio}</Text>
       </View>
 
       <View style={styles.actionsSection}>
@@ -346,7 +373,6 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   header: {
-    backgroundColor: '#021123',
     paddingTop: 40,
     paddingBottom: 20,
     paddingHorizontal: 20,

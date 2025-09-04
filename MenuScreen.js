@@ -9,6 +9,7 @@ import {
   SafeAreaView,
 } from 'react-native';
 import { useAuth } from './AuthContext';
+import { globalStyles, colors } from './theme';
 
 export default function MenuScreen({ navigation }) {
   const { logout, userData } = useAuth();
@@ -26,16 +27,16 @@ export default function MenuScreen({ navigation }) {
 
   const menuItems = [
     {
-      title: 'Calculadora',
-      description: 'Calculadora básica',
-      color: '#4CAF50',
-      onPress: () => navigation.navigate('Calculator'),
-    },
-    {
       title: 'Perfil',
       description: 'Ver e editar informações do perfil',
       color: '#2196F3',
       onPress: () => navigation.navigate('Profile'),
+    },
+    {
+      title: 'Calculadora',
+      description: 'Calculadora básica',
+      color: '#4CAF50',
+      onPress: () => navigation.navigate('Calculator'),
     },
     {
       title: 'Galeria',
@@ -87,7 +88,7 @@ export default function MenuScreen({ navigation }) {
   };
 
   return (
-    <SafeAreaView style={[styles.container, darkMode ? styles.darkBackground : styles.lightBackground]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: darkMode ? colors.darkBackground : colors.lightBackground }]}>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Menu Principal</Text>
       </View>
@@ -103,7 +104,8 @@ export default function MenuScreen({ navigation }) {
             style={[
               styles.menuItem, 
               { borderLeftColor: item.color },
-              index === menuItems.length - 1 && styles.lastMenuItem
+              index === menuItems.length - 1 && styles.lastMenuItem,
+              darkMode ? styles.menuItemDark : styles.menuItemLight
             ]}
             onPress={item.onPress}
             activeOpacity={0.7}
@@ -145,14 +147,11 @@ export default function MenuScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  lightBackground: { backgroundColor: '#fff' },
-  darkBackground: { backgroundColor: '#021123' },
   container: {
     flex: 1,
     backgroundColor: '#021123',
   },
   header: {
-    backgroundColor: '#021123',
     paddingTop: 40,
     paddingBottom: 20,
     paddingHorizontal: 20,
@@ -176,14 +175,12 @@ const styles = StyleSheet.create({
     paddingTop: 25,
   },
   menuItem: {
-    backgroundColor: '#fff',
     borderRadius: 12,
     marginBottom: 15,
     padding: 15,
     flexDirection: 'row',
     alignItems: 'center',
     borderLeftWidth: 4,
-    elevation: 5,
   },
   lastMenuItem: {
     marginBottom: 40, 
@@ -195,11 +192,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: '#333',
-    marginBottom: 5,
   },
   menuItemDescription: {
     fontSize: 14,
     color: '#666',
+    fontWeight: 700,
   },
   menuItemIcon: {
     width: 40,
@@ -260,5 +257,9 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     textAlign: 'center',
   },
+
+  // Dark Mode
+  menuItemDark: { backgroundColor: '#fff' },
+  menuItemLight: { backgroundColor: '#2576cb42' },
 });
 
