@@ -11,6 +11,7 @@ import CalculatorScreen from './CalculatorScreen';
 import ProfileScreen from './ProfileScreen';
 import GalleryScreen from './GalleryScreen';
 import PokemonScreen from './PokemonScreen';
+import PokemonDetailsScreen from './PokemonDetailsScreen';
 import SettingsScreen from './SettingsScreen';
 
 const Stack = createStackNavigator();
@@ -42,6 +43,7 @@ function AppContent() {
             <Stack.Screen name="Profile" component={ProfileScreen} />
             <Stack.Screen name="Gallery" component={GalleryScreen} />
             <Stack.Screen name="Pokemon" component={PokemonScreen} />
+            <Stack.Screen name="PokemonDetails" component={PokemonDetailsScreen} />
             <Stack.Screen name="Settings" component={SettingsScreen} />
           </>
         ) : (

@@ -11,19 +11,20 @@ export default function PokemonScreen({ navigation }) {
 
   useEffect(() => {
     axios
-      .get('https://pokeapi.co/api/v2/pokemon?limit=20')
+      .get('https://pokeapi.co/api/v2/pokemon?limit=151')
       .then(async response => {
         const results = await Promise.all(
-          response.data.results.map(async (poke) => {
-            const details = await axios.get(poke.url);
-            console.log(details);
-            return {
-              name: poke.name,
-              image: details.data.sprites.front_default,
-              type: details.data.types.map(t => t.type.name).join(', ')
-            };
-          })
-        );
+        response.data.results.map(async (poke) => {
+          const details = await axios.get(poke.url);
+          return {
+            ...details.data, // pega TODOS os dados da API
+            name: poke.name, // mantém o nome
+            image: details.data.sprites.front_default, // mantém a imagem "simples"
+            type: details.data.types.map(t => t.type.name).join(', '), // mantém o type
+          };
+        })
+      );
+
         setPokemons(results);
         setLoading(false);
       })
@@ -59,11 +60,15 @@ export default function PokemonScreen({ navigation }) {
         numColumns={2}
         contentContainerStyle={styles.listContainer}
         renderItem={({ item }) => (
-          <View style={[styles.card, { backgroundColor: darkMode ? colors.bgCardDark : colors.bgCardLight }]}>
+          <TouchableOpacity 
+            style={[styles.card, { backgroundColor: darkMode ? colors.bgCardDark : colors.bgCardLight }]}
+            activeOpacity={0.7}
+            onPress={() => navigation.navigate('PokemonDetails', { pokemon: item })}
+          >
             <Image source={{ uri: item.image }} style={styles.image} />
             <Text style={styles.name}>{item.name.toUpperCase()}</Text>
             <Text style={[styles.type, { color: darkMode ? colors.textDark : colors.textLight }]}>Tipo: {item.type}</Text>
-          </View>
+          </TouchableOpacity>
         )}
       />
     </View>
@@ -117,6 +122,6 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   image: { width: 80, height: 80 },
-  name: { marginTop: 5, fontWeight: 'bold', fontSize: 16, color: '#E3350D' },
+  name: { fontSize: 16, fontWeight: 'bold', color: '#E3350D' },
   type: { fontSize: 14, fontWeight: 'bold' },
 });
