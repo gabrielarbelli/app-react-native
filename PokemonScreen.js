@@ -14,14 +14,15 @@ export default function PokemonScreen({ navigation }) {
 
   // Filtra pelo id
   const filteredPokemons = pokemons.filter(p => {
-    if (generation === 1) return p.id <= 151;
-    if (generation === 2) return p.id >= 152 && p.id <= 251;
+    if (generation === 1) return p.id <= 151; // IDs da 1ª geração
+    if (generation === 2) return p.id >= 152 && p.id <= 251; // IDs da 2ª geração
+    if (generation === 3) return p.id >= 252 && p.id <= 386; // IDs da 3ª geração
     return true;
   });
 
   useEffect(() => {
     axios
-      .get('https://pokeapi.co/api/v2/pokemon?limit=251')
+      .get('https://pokeapi.co/api/v2/pokemon?limit=386')
       .then(async response => {
         const results = await Promise.all(
         response.data.results.map(async (poke) => {
@@ -76,6 +77,12 @@ export default function PokemonScreen({ navigation }) {
           onPress={() => setGeneration(2)}
         >
           <Text style={styles.genButtonText}>2ª Geração</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.genButton, generation === 3 && styles.genButtonActive]}
+          onPress={() => setGeneration(3)}
+        >
+          <Text style={styles.genButtonText}>3ª Geração</Text>
         </TouchableOpacity>
       </View>
       
