@@ -62,8 +62,8 @@ export default function PokemonDetailsScreen({ route, navigation }) {
 
   if (loading) {
     return (
-      <View style={styles.center}>
-        <ActivityIndicator size="large" color="#E3350D" />
+      <View style={[styles.center, { backgroundColor: darkMode ? colors.darkBackground : colors.lightBackground }]}>
+        <ActivityIndicator size="large" color="#2196F3" />
       </View>
     );
   }

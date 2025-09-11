@@ -21,7 +21,7 @@ export default function GalleryScreen({ navigation }) {
 
   if (loading) {
     return (
-      <View style={styles.center}>
+      <View style={[styles.center, { backgroundColor: darkMode ? colors.darkBackground : colors.lightBackground }]}>
         <ActivityIndicator size="large" color="#2196F3" />
       </View>
     );
@@ -66,7 +66,6 @@ const styles = StyleSheet.create({
     flex: 1, 
     justifyContent: 'center', 
     alignItems: 'center',
-    backgroundColor: '#021123',
   },
   header: {
     paddingTop: 40,
