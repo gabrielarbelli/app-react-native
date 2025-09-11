@@ -304,25 +304,26 @@ const styles = StyleSheet.create({
 });
 
 export const typeIcons = {
-  normal: require('./assets/normal.png'),
-  fire: require('./assets/fire.png'),  
-  water: require('./assets/water.png'),
-  electric: require('./assets/electric.png'),
-  grass: require('./assets/grass.png'),
-  ice: require('./assets/ice.png'),
-  fighting: require('./assets/fighting.png'),
-  poison: require('./assets/poison.png'),
-  ground: require('./assets/ground.png'),
-  flying: require('./assets/flying.png'),
-  psychic: require('./assets/psychic.png'),
   bug: require('./assets/bug.png'),
-  rock: require('./assets/rock.png'),
-  ghost: require('./assets/ghost.png'),
-  dragon: require('./assets/dragon.png'),
   dark: require('./assets/dark.png'),
-  steel: require('./assets/steel.png'),
+  dragon: require('./assets/dragon.png'),
+  electric: require('./assets/electric.png'),
   fairy: require('./assets/fairy.png'),
+  fighting: require('./assets/fighting.png'),
+  fire: require('./assets/fire.png'),
+  flying: require('./assets/flying.png'),
+  ghost: require('./assets/ghost.png'),
+  grass: require('./assets/grass.png'),
+  ground: require('./assets/ground.png'),
+  ice: require('./assets/ice.png'),
+  normal: require('./assets/normal.png'),
+  poison: require('./assets/poison.png'),
+  psychic: require('./assets/psychic.png'),
+  rock: require('./assets/rock.png'),
+  steel: require('./assets/steel.png'),
+  water: require('./assets/water.png'),
 };
+
 
 export const typeColors = {
   bug: '#A6B91A',
