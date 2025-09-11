@@ -11,7 +11,7 @@ export default function PokemonScreen({ navigation }) {
 
   useEffect(() => {
     axios
-      .get('https://pokeapi.co/api/v2/pokemon?limit=151')
+      .get('https://pokeapi.co/api/v2/pokemon?limit=251')
       .then(async response => {
         const results = await Promise.all(
         response.data.results.map(async (poke) => {
