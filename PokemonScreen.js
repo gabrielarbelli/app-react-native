@@ -69,27 +69,31 @@ export default function PokemonScreen({ navigation }) {
       <View style={{ flexDirection: 'row', justifyContent: 'center', marginVertical: 10 }}>
         <TouchableOpacity
           style={[styles.genButton, generation === 1 && styles.genButtonActive]}
+          activeOpacity={0.7}
           onPress={() => setGeneration(1)}
         >
           <Text style={styles.genButtonText}>1ª Geração</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.genButton, generation === 2 && styles.genButtonActive]}
+          activeOpacity={0.7}
           onPress={() => setGeneration(2)}
         >
           <Text style={styles.genButtonText}>2ª Geração</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.genButton, generation === 3 && styles.genButtonActive]}
+          activeOpacity={0.7}
           onPress={() => setGeneration(3)}
         >
           <Text style={styles.genButtonText}>3ª Geração</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.genButton, generation === 4 && styles.genButtonActive]}
+          activeOpacity={0.7}
           onPress={() => setGeneration(4)}
         >
-          <Text style={styles.genButtonText}>3ª Geração</Text>
+          <Text style={styles.genButtonText}>4ª Geração</Text>
         </TouchableOpacity>
       </View>
       
