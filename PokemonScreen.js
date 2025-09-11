@@ -9,6 +9,16 @@ export default function PokemonScreen({ navigation }) {
   const [loading, setLoading] = useState(true);
   const { darkMode, updateDarkMode } = useAuth();
 
+  // Estado para escolher a geração
+  const [generation, setGeneration] = useState(1); // 1 ou 2
+
+  // Filtra pelo id
+  const filteredPokemons = pokemons.filter(p => {
+    if (generation === 1) return p.id <= 151;
+    if (generation === 2) return p.id >= 152 && p.id <= 251;
+    return true;
+  });
+
   useEffect(() => {
     axios
       .get('https://pokeapi.co/api/v2/pokemon?limit=251')
@@ -53,9 +63,24 @@ export default function PokemonScreen({ navigation }) {
           <Text style={styles.backButtonText}>← Voltar</Text>
         </TouchableOpacity>
       </View>
+
+      <View style={{ flexDirection: 'row', justifyContent: 'center', marginVertical: 10 }}>
+        <TouchableOpacity
+          style={[styles.genButton, generation === 1 && styles.genButtonActive]}
+          onPress={() => setGeneration(1)}
+        >
+          <Text style={styles.genButtonText}>1ª Geração</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.genButton, generation === 2 && styles.genButtonActive]}
+          onPress={() => setGeneration(2)}
+        >
+          <Text style={styles.genButtonText}>2ª Geração</Text>
+        </TouchableOpacity>
+      </View>
       
       <FlatList
-        data={pokemons}
+        data={filteredPokemons}
         keyExtractor={(item, index) => index.toString()}
         numColumns={2}
         contentContainerStyle={styles.listContainer}
@@ -124,4 +149,20 @@ const styles = StyleSheet.create({
   image: { width: 80, height: 80 },
   name: { fontSize: 16, fontWeight: 'bold', color: '#E3350D' },
   type: { fontSize: 14, fontWeight: 'bold' },
+  genButton: {
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    marginHorizontal: 5,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#2879cf',
+  },
+  genButtonActive: {
+    backgroundColor: '#2879cf',
+  },
+  genButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+
 });
