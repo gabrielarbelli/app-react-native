@@ -324,7 +324,6 @@ export const typeIcons = {
   water: require('./assets/water.png'),
 };
 
-
 export const typeColors = {
   bug: '#A6B91A',
   dark: '#705746',
