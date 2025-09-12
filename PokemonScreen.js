@@ -3,6 +3,7 @@ import { View, Text, FlatList, Image, ActivityIndicator, StyleSheet, TouchableOp
 import axios from 'axios';
 import { colors } from './theme';
 import { useAuth } from './AuthContext';
+import DropDownPicker from 'react-native-dropdown-picker';
 
 export default function PokemonScreen({ navigation }) {
   const [pokemons, setPokemons] = useState([]);
@@ -10,20 +11,27 @@ export default function PokemonScreen({ navigation }) {
   const { darkMode, updateDarkMode } = useAuth();
 
   // Estado para escolher a geração
-  const [generation, setGeneration] = useState(1); // 1 ou 2
+  const [generation, setGeneration] = useState(1);
+  const [open, setOpen] = useState(false);
 
   // Filtra pelo id
   const filteredPokemons = pokemons.filter(p => {
-    if (generation === 1) return p.id <= 151; // IDs da 1ª geração
-    if (generation === 2) return p.id >= 152 && p.id <= 251; // IDs da 2ª geração
-    if (generation === 3) return p.id >= 252 && p.id <= 386; // IDs da 3ª geração
-    if (generation === 4) return p.id >= 387 && p.id <= 493; // IDs da 4ª geração
+    if (generation === 1) return p.id >= 1 && p.id <= 151;
+    if (generation === 2) return p.id >= 152 && p.id <= 251;
+    if (generation === 3) return p.id >= 252 && p.id <= 386;
+    if (generation === 4) return p.id >= 387 && p.id <= 493;
+    if (generation === 5) return p.id >= 494 && p.id <= 649;
+    if (generation === 6) return p.id >= 650 && p.id <= 721;
+    if (generation === 7) return p.id >= 722 && p.id <= 809;
+    if (generation === 8) return p.id >= 810 && p.id <= 898;
+    if (generation === 9) return p.id >= 899 && p.id <= 1010;
     return true;
   });
 
+
   useEffect(() => {
     axios
-      .get('https://pokeapi.co/api/v2/pokemon?limit=493')
+      .get('https://pokeapi.co/api/v2/pokemon?limit=1010')
       .then(async response => {
         const results = await Promise.all(
         response.data.results.map(async (poke) => {
@@ -66,37 +74,34 @@ export default function PokemonScreen({ navigation }) {
         </TouchableOpacity>
       </View>
 
-      <View style={{ flexDirection: 'row', justifyContent: 'center', marginVertical: 10 }}>
-        <TouchableOpacity
-          style={[styles.genButton, generation === 1 && styles.genButtonActive]}
+      <View style={{ flexDirection: 'row', justifyContent: 'center', marginVertical: 10, marginHorizontal: 15 }}>
+        <DropDownPicker
+          items={[
+            { label: '1ª Geração', value: 1 },
+            { label: '2ª Geração', value: 2 },
+            { label: '3ª Geração', value: 3 },
+            { label: '4ª Geração', value: 4 },
+            { label: '5ª Geração', value: 5 },
+            { label: '6ª Geração', value: 6 },
+            { label: '7ª Geração', value: 7 },
+            { label: '8ª Geração', value: 8 },
+            { label: '9ª Geração', value: 9 },
+          ]}
+          open={open}
+          setOpen={setOpen}
+          value={generation}
+          setValue={setGeneration}
           activeOpacity={0.7}
-          onPress={() => setGeneration(1)}
-        >
-          <Text style={styles.genButtonText}>1ª Geração</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.genButton, generation === 2 && styles.genButtonActive]}
-          activeOpacity={0.7}
-          onPress={() => setGeneration(2)}
-        >
-          <Text style={styles.genButtonText}>2ª Geração</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.genButton, generation === 3 && styles.genButtonActive]}
-          activeOpacity={0.7}
-          onPress={() => setGeneration(3)}
-        >
-          <Text style={styles.genButtonText}>3ª Geração</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.genButton, generation === 4 && styles.genButtonActive]}
-          activeOpacity={0.7}
-          onPress={() => setGeneration(4)}
-        >
-          <Text style={styles.genButtonText}>4ª Geração</Text>
-        </TouchableOpacity>
+          style={{
+            backgroundColor: darkMode ? colors.bgCardDark : colors.bgCardLight,
+            borderColor: '#2879cf',
+          }}
+          labelStyle={{
+            color: darkMode ? colors.textDark : colors.textLight,
+          }}
+        />
       </View>
-      
+
       <FlatList
         data={filteredPokemons}
         keyExtractor={(item, index) => index.toString()}
