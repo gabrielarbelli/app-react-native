@@ -333,7 +333,7 @@ export const typeColors = {
   fighting: '#C22E28',
   fire: '#EE8130',
   flying: '#799de7',
-  ghost: '#735797',
+  ghost: '#607bc9',
   grass: '#7AC74C',
   ground: '#f1824a',
   ice: '#96D9D6',
