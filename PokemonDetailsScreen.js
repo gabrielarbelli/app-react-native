@@ -335,7 +335,7 @@ export const typeColors = {
   flying: '#799de7',
   ghost: '#735797',
   grass: '#7AC74C',
-  ground: '#E2BF65',
+  ground: '#f1824a',
   ice: '#96D9D6',
   normal: '#9fa8b1',
   poison: '#A33EA1',
