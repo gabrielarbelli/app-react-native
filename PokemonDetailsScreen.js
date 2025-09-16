@@ -326,7 +326,7 @@ export const typeIcons = {
 
 export const typeColors = {
   bug: '#A6B91A',
-  dark: '#705746',
+  dark: '#4c4755',
   dragon: '#0761af',
   electric: '#F7D02C',
   fairy: '#D685AD',
