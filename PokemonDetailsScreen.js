@@ -341,6 +341,6 @@ export const typeColors = {
   poison: '#A33EA1',
   psychic: '#F95587',
   rock: '#B6A136',
-  steel: '#B7B7CE',
+  steel: '#4f7887',
   water: '#6390F0',
 };
