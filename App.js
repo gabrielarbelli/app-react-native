@@ -13,6 +13,7 @@ import GalleryScreen from './GalleryScreen';
 import PokemonScreen from './PokemonScreen';
 import PokemonDetailsScreen from './PokemonDetailsScreen';
 import SettingsScreen from './SettingsScreen';
+import PokemonTCGChecklistScreen from './PokemonTCGChecklistScreen';
 
 const Stack = createStackNavigator();
 
@@ -44,6 +45,7 @@ function AppContent() {
             <Stack.Screen name="Gallery" component={GalleryScreen} />
             <Stack.Screen name="Pokemon" component={PokemonScreen} />
             <Stack.Screen name="PokemonDetails" component={PokemonDetailsScreen} />
+            <Stack.Screen name="PokemonTCGChecklist" component={PokemonTCGChecklistScreen} />
             <Stack.Screen name="Settings" component={SettingsScreen} />
           </>
         ) : (
