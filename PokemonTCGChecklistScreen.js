@@ -182,6 +182,13 @@ export default function PokemonTCGChecklistScreen({ navigation }) {
   const ownedCount = useMemo(() => ownedIds.size, [ownedIds]);
   const totalCount = allPokemon.length;
 
+  const percentComplete = useMemo(() => {
+    if (totalCount <= 0) return "0";
+    const raw = (ownedCount / totalCount) * 100;
+    const truncated = Math.trunc(raw * 1000) / 1000;
+    return String(truncated).replace(/\.?0+$/, "");
+  }, [ownedCount, totalCount]);
+
   const loadTypesForId = useCallback(async (id) => {
     if (!id) return;
     if (typesByIdRef.current[id]) return;
@@ -238,7 +245,10 @@ export default function PokemonTCGChecklistScreen({ navigation }) {
       <View style={styles.topInfo}>
         <Text style={[styles.counterText, { color: textColor }]}>
           Marcados: <Text style={styles.counterStrong}>{ownedCount}</Text> /{" "}
-          {totalCount}
+          {totalCount}{" "}
+          <Text style={{ fontWeight: "700", color: colors.primary }}>
+            ({percentComplete}%)
+          </Text>
         </Text>
       </View>
 
