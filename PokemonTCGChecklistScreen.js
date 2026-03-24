@@ -20,6 +20,7 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { colors } from "./theme";
 import { useAuth } from "./AuthContext";
+import { typeColors, typeIcons } from "./PokemonDetailsScreen";
 
 const STORAGE_KEY = "tcgOwnedPokemonIds_v1";
 
@@ -46,7 +47,10 @@ export default function PokemonTCGChecklistScreen({ navigation }) {
   const [query, setQuery] = useState("");
   const [allPokemon, setAllPokemon] = useState([]); // { id, name, image }
   const [ownedIds, setOwnedIds] = useState(() => new Set());
+  const [typesById, setTypesById] = useState({});
   const saveTimeoutRef = useRef(null);
+  const loadingTypesRef = useRef(new Set());
+  const typesByIdRef = useRef({});
 
   const bg = darkMode ? colors.darkBackground : colors.lightBackground;
   const cardBg = darkMode ? colors.bgCardDark : colors.bgCardLight;
@@ -77,6 +81,10 @@ export default function PokemonTCGChecklistScreen({ navigation }) {
     },
     [schedulePersistOwned],
   );
+
+  useEffect(() => {
+    typesByIdRef.current = typesById;
+  }, [typesById]);
 
   useEffect(() => {
     let mounted = true;
@@ -174,6 +182,35 @@ export default function PokemonTCGChecklistScreen({ navigation }) {
   const ownedCount = useMemo(() => ownedIds.size, [ownedIds]);
   const totalCount = allPokemon.length;
 
+  const loadTypesForId = useCallback(async (id) => {
+    if (!id) return;
+    if (typesByIdRef.current[id]) return;
+    if (loadingTypesRef.current.has(id)) return;
+
+    loadingTypesRef.current.add(id);
+    try {
+      const res = await axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`);
+      const rawTypes = Array.isArray(res?.data?.types) ? res.data.types : [];
+      const parsedTypes = rawTypes.map((t) => t?.type?.name).filter(Boolean);
+
+      setTypesById((prev) => ({
+        ...prev,
+        [id]: parsedTypes,
+      }));
+    } catch (e) {
+      console.error(`Erro ao carregar tipos do pokemon ${id}:`, e);
+    } finally {
+      loadingTypesRef.current.delete(id);
+    }
+  }, []);
+
+  const onViewableItemsChanged = useRef(({ viewableItems }) => {
+    viewableItems.forEach((entry) => {
+      const id = entry?.item?.id;
+      if (id) loadTypesForId(id);
+    });
+  });
+
   if (loading) {
     return (
       <View style={[styles.center, { backgroundColor: bg }]}>
@@ -249,8 +286,11 @@ export default function PokemonTCGChecklistScreen({ navigation }) {
         data={filteredPokemon}
         keyExtractor={(item) => String(item.id)}
         contentContainerStyle={styles.listContent}
+        onViewableItemsChanged={onViewableItemsChanged.current}
+        viewabilityConfig={{ itemVisiblePercentThreshold: 35 }}
         renderItem={({ item }) => {
           const checked = ownedIds.has(item.id);
+          const itemTypes = typesById[item.id] || [];
           return (
             <TouchableOpacity
               onPress={() => toggleOwned(item.id)}
@@ -266,6 +306,27 @@ export default function PokemonTCGChecklistScreen({ navigation }) {
                 <Text style={[styles.rowTitle, { color: textColor }]}>
                   #{item.id} {formatName(item.name)}
                 </Text>
+                <View style={styles.typeRow}>
+                  {itemTypes.map((typeName) => (
+                    <View
+                      key={`${item.id}-${typeName}`}
+                      style={[
+                        styles.typeCard,
+                        { backgroundColor: typeColors[typeName] || "#777" },
+                      ]}
+                    >
+                      {typeIcons[typeName] ? (
+                        <Image
+                          source={typeIcons[typeName]}
+                          style={styles.typeIcon}
+                        />
+                      ) : null}
+                      <Text style={styles.typeText}>
+                        {String(typeName).toUpperCase()}
+                      </Text>
+                    </View>
+                  ))}
+                </View>
               </View>
 
               <View
@@ -344,7 +405,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   listContent: {
-    paddingHorizontal: 12,
+    paddingHorizontal: 20,
     paddingBottom: 24,
   },
   row: {
@@ -368,6 +429,31 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "800",
     textTransform: "capitalize",
+  },
+  typeRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 4,
+    flexWrap: "wrap",
+  },
+  typeCard: {
+    borderRadius: 6,
+    paddingHorizontal: 5,
+    paddingVertical: 2,
+    marginRight: 5,
+    marginTop: 3,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  typeIcon: {
+    width: 14,
+    height: 14,
+    marginRight: 2,
+  },
+  typeText: {
+    color: "#fff",
+    fontSize: 11,
+    fontWeight: "700",
   },
   checkbox: {
     width: 26,
